@@ -1,5 +1,4 @@
 const Joi = require('joi');
-const UserServices = require('../services/user');
 
 const userDataSchema = Joi.object({
   displayName: Joi
@@ -28,18 +27,6 @@ const userDataSchema = Joi.object({
   image: Joi.string(),
 });
 
-const validateUserExistence = async (req, _res, next) => {
-  try {
-    const { email } = req.body;
-
-    await UserServices.getByEmail(email);
-
-    next();
-  } catch (error) {
-    next(error);
-  }
-};
-
 const validateUserData = async (req, _res, next) => {
   try {
     const { displayName, email, password, image } = req.body;
@@ -47,7 +34,7 @@ const validateUserData = async (req, _res, next) => {
     const { error } = userDataSchema
       .validate({ displayName, email, password, image });
 
-    if (error) return next(error);
+    if (error) throw error;
 
     next();
   } catch (error) {
@@ -56,6 +43,5 @@ const validateUserData = async (req, _res, next) => {
 };
 
 module.exports = {
-  validateUserExistence,
   validateUserData,
 };
