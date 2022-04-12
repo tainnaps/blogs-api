@@ -1,6 +1,6 @@
 const statusByErrorType = {
   conflict: 409,
-  badRequest: 400,
+  invalidFields: 400,
 };
 
 const getStatusByError = (errorType) => statusByErrorType[errorType];
