@@ -1,8 +1,19 @@
 const Sequelize = require('sequelize');
-const { BlogPost, PostCategory, Category } = require('../models');
+const { BlogPost, PostCategory, Category, User } = require('../models');
 const config = require('../config/config');
 
 const sequelize = new Sequelize(config.development);
+
+const getAll = async () => {
+  const posts = await BlogPost.findAll({
+    include: [
+      { model: User, as: 'user' },
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
+  });
+
+  return posts;
+};
 
 const validateCategoryId = async (categoryId) => {
   const existingCategory = await Category.findOne({ where: { id: categoryId } });
@@ -44,5 +55,6 @@ const create = async (title, content, categoryIds, userId) => {
 };
 
 module.exports = {
+  getAll,
   create,
 };

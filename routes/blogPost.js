@@ -5,6 +5,13 @@ const BlogPostControllers = require('../controllers/blogPost');
 
 const router = express.Router();
 
+router.get(
+  '/',
+  validateTokenExistence,
+  validateToken,
+  BlogPostControllers.getAll,
+);
+
 router.post(
   '/',
   validateTokenExistence,
