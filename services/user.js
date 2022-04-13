@@ -1,7 +1,19 @@
 const { User } = require('../models');
 
+const getAll = async () => {
+  const users = await User.findAll();
+
+  return users;
+};
+
+const getByEmail = async (email) => {
+  const user = await User.findOne({ where: { email } });
+
+  return user;
+};
+
 const create = async (displayName, email, password, image) => {
-  const existingUser = await User.findOne({ where: { email } });
+  const existingUser = await getByEmail(email);
 
   if (existingUser) {
     const error = new Error('User already registered');
@@ -14,5 +26,7 @@ const create = async (displayName, email, password, image) => {
 };
 
 module.exports = {
+  getAll,
+  getByEmail,
   create,
 };
