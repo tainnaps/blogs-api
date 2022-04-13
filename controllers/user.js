@@ -14,6 +14,18 @@ const getAll = async (_req, res, next) => {
   }
 };
 
+const getById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const user = await UserServices.getById(id);
+
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const create = async (req, res, next) => {
   try {
     const { displayName, email, password, image } = req.body;
@@ -30,5 +42,6 @@ const create = async (req, res, next) => {
 
 module.exports = {
   getAll,
+  getById,
   create,
 };

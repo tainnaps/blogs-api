@@ -6,6 +6,13 @@ const UserControllers = require('../controllers/user');
 const router = express.Router();
 
 router.get(
+  '/:id',
+  validateTokenExistence,
+  validateToken,
+  UserControllers.getById,
+);
+
+router.get(
   '/',
   validateTokenExistence,
   validateToken,

@@ -12,6 +12,19 @@ const getByEmail = async (email) => {
   return user;
 };
 
+const getById = async (id) => {
+  const user = await User.findOne({ where: { id } });
+
+  if (!user) {
+    const error = new Error('User does not exist');
+    error.type = 'notFound';
+
+    throw error;
+  }
+
+  return user;
+};
+
 const create = async (displayName, email, password, image) => {
   const existingUser = await getByEmail(email);
 
@@ -28,5 +41,6 @@ const create = async (displayName, email, password, image) => {
 module.exports = {
   getAll,
   getByEmail,
+  getById,
   create,
 };
