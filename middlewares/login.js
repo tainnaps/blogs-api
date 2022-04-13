@@ -24,18 +24,14 @@ const loginSchema = Joi.object({
 });
 
 const validateLoginData = async (req, _res, next) => {
-  try {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    const { error } = loginSchema
-      .validate({ email, password });
+  const { error } = loginSchema
+    .validate({ email, password });
 
-    if (error) throw error;
+  if (error) return next(error);
 
-    next();
-  } catch (error) {
-    next(error);
-  }
+  next();
 };
 
 module.exports = {

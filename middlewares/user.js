@@ -28,18 +28,14 @@ const userDataSchema = Joi.object({
 });
 
 const validateUserData = async (req, _res, next) => {
-  try {
-    const { displayName, email, password, image } = req.body;
+  const { displayName, email, password, image } = req.body;
 
-    const { error } = userDataSchema
-      .validate({ displayName, email, password, image });
+  const { error } = userDataSchema
+    .validate({ displayName, email, password, image });
 
-    if (error) throw error;
+  if (error) return next(error);
 
-    next();
-  } catch (error) {
-    next(error);
-  }
+  next();
 };
 
 module.exports = {
