@@ -5,6 +5,13 @@ const CategoryControllers = require('../controllers/category');
 
 const router = express.Router();
 
+router.get(
+  '/',
+  validateTokenExistence,
+  validateToken,
+  CategoryControllers.getAll,
+);
+
 router.post(
   '/',
   validateTokenExistence,
