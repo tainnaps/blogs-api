@@ -6,6 +6,13 @@ const BlogPostControllers = require('../controllers/blogPost');
 const router = express.Router();
 
 router.get(
+  '/:id',
+  validateTokenExistence,
+  validateToken,
+  BlogPostControllers.getById,
+);
+
+router.get(
   '/',
   validateTokenExistence,
   validateToken,

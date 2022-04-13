@@ -7,12 +7,31 @@ const sequelize = new Sequelize(config.development);
 const getAll = async () => {
   const posts = await BlogPost.findAll({
     include: [
-      { model: User, as: 'user' },
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
       { model: Category, as: 'categories', through: { attributes: [] } },
     ],
   });
 
   return posts;
+};
+
+const getById = async (id) => {
+  const post = await BlogPost.findOne({
+    where: { id },
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
+  });
+
+  if (!post) {
+    const error = new Error('Post does not exist');
+    error.type = 'notFound';
+
+    throw error;
+  }
+
+  return post;
 };
 
 const validateCategoryId = async (categoryId) => {
@@ -56,5 +75,6 @@ const create = async (title, content, categoryIds, userId) => {
 
 module.exports = {
   getAll,
+  getById,
   create,
 };
