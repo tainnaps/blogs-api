@@ -1,8 +1,8 @@
 const express = require('express');
-const UserRouter = require('./routes/user');
-const LoginRouter = require('./routes/login');
-const CategoryRouter = require('./routes/category');
-const BlogPostRouter = require('./routes/blogPost');
+const UserRoutes = require('./routes/user');
+const LoginRoutes = require('./routes/login');
+const CategoryRoutes = require('./routes/category');
+const BlogPostRoutes = require('./routes/blogPost');
 const errorMiddleware = require('./middlewares/error');
 
 const app = express();
@@ -16,12 +16,12 @@ app.get('/', (request, response) => {
   response.send();
 });
 
-app.use('/user', UserRouter);
+app.use('/user', UserRoutes);
 
-app.use('/login', LoginRouter);
+app.use('/login', LoginRoutes);
 
-app.use('/categories', CategoryRouter);
+app.use('/categories', CategoryRoutes);
 
-app.use('/post', BlogPostRouter);
+app.use('/post', BlogPostRoutes);
 
 app.use(errorMiddleware);
