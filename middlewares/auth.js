@@ -3,7 +3,7 @@ const UserServices = require('../services/user');
 
 const SECRET = process.env.JWT_SECRET;
 
-const validateTokenExistence = (req, _res, next) => {
+const validateToken = async (req, _res, next) => {
   const { authorization: token } = req.headers;
 
   if (!token) {
@@ -13,13 +13,7 @@ const validateTokenExistence = (req, _res, next) => {
     return next(error);
   }
 
-  next();
-};
-
-const validateToken = async (req, _res, next) => {
   try {
-    const { authorization: token } = req.headers;
-
     const { payload: email } = jwt.verify(token, SECRET);
 
     const user = await UserServices.getByEmail(email);
@@ -36,6 +30,5 @@ const validateToken = async (req, _res, next) => {
 };
 
 module.exports = {
-  validateTokenExistence,
   validateToken,
 };
