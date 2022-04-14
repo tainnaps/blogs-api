@@ -1,13 +1,4 @@
-const Joi = require('joi');
-
-const categorySchema = Joi.object({
-  name: Joi
-    .string()
-    .required()
-    .messages({
-      'any.required': '"name" is required',
-    }),
-});
+const { categorySchema } = require('../schemas/category');
 
 const validateCategoryData = (req, _res, next) => {
   const { name } = req.body;

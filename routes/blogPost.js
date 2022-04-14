@@ -2,10 +2,8 @@ const express = require('express');
 const BlogPostControllers = require('../controllers/blogPost');
 const { validateToken } = require('../middlewares/auth');
 const {
-  validatePostTitle,
-  validatePostContent,
-  validatePostCategoryIds,
-  validateCategoryIdsExistence,
+  validateCreatePostData,
+  validateUpdatePostData,
   validatePostUser,
 } = require('../middlewares/blogPost');
 
@@ -32,19 +30,15 @@ router.get(
 router.post(
   '/',
   validateToken,
-  validatePostTitle,
-  validatePostContent,
-  validatePostCategoryIds,
+  validateCreatePostData,
   BlogPostControllers.create,
 );
 
 router.put(
   '/:id',
   validateToken,
-  validatePostTitle,
-  validatePostContent,
-  validateCategoryIdsExistence,
   validatePostUser,
+  validateUpdatePostData,
   BlogPostControllers.update,
 );
 

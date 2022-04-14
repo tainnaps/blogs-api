@@ -1,72 +1,23 @@
-const Joi = require('joi');
 const BlogPostServices = require('../services/blogPost');
 const { createError } = require('../helpers');
+const { createPostSchema, updatePostSchema } = require('../schemas/blogPost');
 
-const titleSchema = Joi.object({
-  title: Joi
-    .string()
-    .required()
-    .messages({
-      'any.required': '"title" is required',
-    }),
-});
+const validateCreatePostData = (req, _res, next) => {
+  const { title, content, categoryIds } = req.body;
 
-const contentSchema = Joi.object({
-  content: Joi
-    .string()
-    .required()
-    .messages({
-      'any.required': '"content" is required',
-    }),
-});
-
-const categoryIdsSchema = Joi.object({
-  categoryIds: Joi
-    .array()
-    .items(Joi.number().integer())
-    .required()
-    .messages({
-      'any.required': '"categoryIds" is required',
-    }),
-});
-
-const validatePostTitle = (req, _res, next) => {
-  const { title } = req.body;
-
-  const { error } = titleSchema.validate({ title });
+  const { error } = createPostSchema.validate({ title, content, categoryIds });
 
   if (error) return next(error);
 
   next();
 };
 
-const validatePostContent = (req, _res, next) => {
-  const { content } = req.body;
+const validateUpdatePostData = (req, _res, next) => {
+  const { title, content, categoryIds } = req.body;
 
-  const { error } = contentSchema.validate({ content });
+  const { error } = updatePostSchema.validate({ title, content, categoryIds });
 
-  if (error) return next(error);
-
-  next();
-};
-
-const validatePostCategoryIds = (req, _res, next) => {
-  const { categoryIds } = req.body;
-
-  const { error } = categoryIdsSchema.validate({ categoryIds });
-
-  if (error) return next(error);
-
-  next();
-};
-
-const validateCategoryIdsExistence = (req, _res, next) => {
-  const { categoryIds } = req.body;
-
-  if (categoryIds) {
-    const error = createError('Categories cannot be edited', 'invalidFields');
-    return next(error);
-  }
+  if (error) { console.log(error); return next(error); }
 
   next();
 };
@@ -90,9 +41,7 @@ const validatePostUser = async (req, _res, next) => {
 };
 
 module.exports = {
-  validatePostTitle,
-  validatePostContent,
-  validatePostCategoryIds,
-  validateCategoryIdsExistence,
+  validateCreatePostData,
+  validateUpdatePostData,
   validatePostUser,
 };
