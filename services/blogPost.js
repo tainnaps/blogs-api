@@ -56,7 +56,7 @@ const create = async ({ title, content, categoryIds, userId }) => {
     );
 
     /*
-      Usei o link abaixo como referência para utilizar loops e promises dentro da transaction (async callback), além de contar com a explicação do William Marques na monitoria.
+      Usei o link abaixo como referência para resolver problema ao usar loop e promises dentro de callback assíncrona da transaction, além de contar com a explicação do William Marques na monitoria.
       link: https://stackoverflow.com/questions/35705622/using-loops-and-promises-in-transactions-in-sequelize
     */
     const createPromises = categoryIds.map((categoryId) => PostCategory.create(

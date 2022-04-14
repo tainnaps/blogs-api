@@ -1,5 +1,9 @@
 const Joi = require('joi');
 
+/*
+  Usei a documentação do Joi como referência para validar email.
+  link: https://joi.dev/api/?v=17.6.0#introduction
+*/
 const loginSchema = Joi.object({
   email: Joi
     .string()
