@@ -70,22 +70,11 @@ const create = async ({ title, content, categoryIds, userId }) => {
   return post;
 };
 
-const validateUserPost = async (postId, userId) => {
-  const post = await BlogPost.findOne({ where: { id: postId } });
-
-  if (post.userId !== userId) {
-    const error = createError('Unauthorized user', 'unauthorized');
-    throw error;
-  }
-};
-
-const update = async ({ postId, userId, title, content }) => {
-  await validateUserPost(postId, userId);
-
-  await BlogPost.update({ title, content, updated: new Date() }, { where: { id: postId } });
+const update = async ({ id, title, content }) => {
+  await BlogPost.update({ title, content, updated: new Date() }, { where: { id } });
 
   const updatedPost = BlogPost.findOne({
-    where: { id: postId },
+    where: { id },
     attributes: { exclude: ['id', 'published', 'updated'] },
     include: [{
       model: Category,
@@ -97,9 +86,14 @@ const update = async ({ postId, userId, title, content }) => {
   return updatedPost;
 };
 
+const deleteById = async (id) => {
+  await BlogPost.destroy({ where: { id } });
+};
+
 module.exports = {
   getAll,
   getById,
   create,
   update,
+  deleteById,
 };

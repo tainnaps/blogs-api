@@ -6,6 +6,7 @@ const {
   validatePostContent,
   validatePostCategoryIds,
   validateCategoryIdsExistence,
+  validatePostUser,
 } = require('../middlewares/blogPost');
 
 const router = express.Router();
@@ -37,7 +38,15 @@ router.put(
   validatePostTitle,
   validatePostContent,
   validateCategoryIdsExistence,
+  validatePostUser,
   BlogPostControllers.update,
+);
+
+router.delete(
+  '/:id',
+  validateToken,
+  validatePostUser,
+  BlogPostControllers.deleteById,
 );
 
 module.exports = router;
