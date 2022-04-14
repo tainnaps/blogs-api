@@ -60,10 +60,23 @@ const deleteById = async (req, res, next) => {
   }
 };
 
+const search = async (req, res, next) => {
+  try {
+    const { q: searchTerm } = req.query;
+
+    const posts = await BlogPostServices.search(searchTerm);
+
+    res.status(200).json(posts);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAll,
   getById,
   create,
   update,
   deleteById,
+  search,
 };

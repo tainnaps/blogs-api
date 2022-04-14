@@ -90,10 +90,27 @@ const deleteById = async (id) => {
   await BlogPost.destroy({ where: { id } });
 };
 
+const search = async (searchTerm) => {
+  const posts = await BlogPost.findAll({
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
+  });
+
+  if (!searchTerm) return posts;
+
+  const filteredPosts = posts
+    .filter(({ title, content }) => title.includes(searchTerm) || content.includes(searchTerm));
+
+  return filteredPosts;
+};
+
 module.exports = {
   getAll,
   getById,
   create,
   update,
   deleteById,
+  search,
 };

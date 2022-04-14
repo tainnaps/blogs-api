@@ -12,6 +12,12 @@ const {
 const router = express.Router();
 
 router.get(
+  '/search',
+  validateToken,
+  BlogPostControllers.search,
+);
+
+router.get(
   '/:id',
   validateToken,
   BlogPostControllers.getById,
