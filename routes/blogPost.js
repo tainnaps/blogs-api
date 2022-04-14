@@ -1,30 +1,43 @@
 const express = require('express');
-const { validatePostData } = require('../middlewares/blogPost');
-const { validateTokenExistence, validateToken } = require('../middlewares/auth');
 const BlogPostControllers = require('../controllers/blogPost');
+const { validateToken } = require('../middlewares/auth');
+const {
+  validatePostTitle,
+  validatePostContent,
+  validatePostCategoryIds,
+  validateCategoryIdsExistence,
+} = require('../middlewares/blogPost');
 
 const router = express.Router();
 
 router.get(
   '/:id',
-  validateTokenExistence,
   validateToken,
   BlogPostControllers.getById,
 );
 
 router.get(
   '/',
-  validateTokenExistence,
   validateToken,
   BlogPostControllers.getAll,
 );
 
 router.post(
   '/',
-  validateTokenExistence,
   validateToken,
-  validatePostData,
+  validatePostTitle,
+  validatePostContent,
+  validatePostCategoryIds,
   BlogPostControllers.create,
+);
+
+router.put(
+  '/:id',
+  validateToken,
+  validatePostTitle,
+  validatePostContent,
+  validateCategoryIdsExistence,
+  BlogPostControllers.update,
 );
 
 module.exports = router;

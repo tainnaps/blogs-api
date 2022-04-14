@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const { BlogPost, PostCategory, Category, User } = require('../models');
+const { createError } = require('../helpers');
 const config = require('../config/config');
 
 const sequelize = new Sequelize(config.development);
@@ -45,7 +46,7 @@ const validateCategoryId = async (categoryId) => {
   }
 };
 
-const create = async (title, content, categoryIds, userId) => {
+const create = async ({ title, content, categoryIds, userId }) => {
   let post;
 
   const validationPromises = categoryIds.map((categoryId) => validateCategoryId(categoryId));
@@ -73,8 +74,36 @@ const create = async (title, content, categoryIds, userId) => {
   return post;
 };
 
+const validateUserPost = async (postId, userId) => {
+  const post = await BlogPost.findOne({ where: { id: postId } });
+
+  if (post.userId !== userId) {
+    const error = createError('Unauthorized user', 'unauthorized');
+    throw error;
+  }
+};
+
+const update = async ({ postId, userId, title, content }) => {
+  await validateUserPost(postId, userId);
+
+  await BlogPost.update({ title, content, updated: new Date() }, { where: { id: postId } });
+
+  const updatedPost = BlogPost.findOne({
+    where: { id: postId },
+    attributes: { exclude: ['id', 'published', 'updated'] },
+    include: [{
+      model: Category,
+      as: 'categories',
+      through: { attributes: [] },
+    }],
+  });
+
+  return updatedPost;
+};
+
 module.exports = {
   getAll,
   getById,
   create,
+  update,
 };

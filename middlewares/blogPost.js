@@ -1,18 +1,25 @@
 const Joi = require('joi');
+const { createError } = require('../helpers');
 
-const postSchema = Joi.object({
+const titleSchema = Joi.object({
   title: Joi
     .string()
     .required()
     .messages({
       'any.required': '"title" is required',
     }),
+});
+
+const contentSchema = Joi.object({
   content: Joi
     .string()
     .required()
     .messages({
       'any.required': '"content" is required',
     }),
+});
+
+const categoryIdsSchema = Joi.object({
   categoryIds: Joi
     .array()
     .items(Joi.number().integer())
@@ -22,16 +29,50 @@ const postSchema = Joi.object({
     }),
 });
 
-const validatePostData = (req, _res, next) => {
-  const { title, content, categoryIds } = req.body;
+const validatePostTitle = (req, _res, next) => {
+  const { title } = req.body;
 
-  const { error } = postSchema.validate({ title, content, categoryIds });
+  const { error } = titleSchema.validate({ title });
 
   if (error) return next(error);
 
   next();
 };
 
+const validatePostContent = (req, _res, next) => {
+  const { content } = req.body;
+
+  const { error } = contentSchema.validate({ content });
+
+  if (error) return next(error);
+
+  next();
+};
+
+const validatePostCategoryIds = (req, _res, next) => {
+  const { categoryIds } = req.body;
+
+  const { error } = categoryIdsSchema.validate({ categoryIds });
+
+  if (error) return next(error);
+
+  next();
+};
+
+const validateCategoryIdsExistence = (req, _res, next) => {
+  const { categoryIds } = req.body;
+
+  if (categoryIds) {
+    const error = createError('Categories cannot be edited', 'invalidFields');
+    return next(error);
+  }
+
+  next();
+};
+
 module.exports = {
-  validatePostData,
+  validatePostTitle,
+  validatePostContent,
+  validatePostCategoryIds,
+  validateCategoryIdsExistence,
 };
