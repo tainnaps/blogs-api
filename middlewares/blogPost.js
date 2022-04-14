@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const BlogPostServices = require('../services/blogPost');
 const { createError } = require('../helpers');
 
 const titleSchema = Joi.object({
@@ -70,9 +71,28 @@ const validateCategoryIdsExistence = (req, _res, next) => {
   next();
 };
 
+const validatePostUser = async (req, _res, next) => {
+  try {
+    const { id: postId } = req.params;
+    const { id: userId } = req.user;
+
+    const post = await BlogPostServices.getById(postId);
+
+    if (post.userId !== userId) {
+      const error = createError('Unauthorized user', 'unauthorized');
+      throw error;
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   validatePostTitle,
   validatePostContent,
   validatePostCategoryIds,
   validateCategoryIdsExistence,
+  validatePostUser,
 };
