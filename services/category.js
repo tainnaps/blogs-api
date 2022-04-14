@@ -1,4 +1,5 @@
 const { Category } = require('../models');
+const { createError } = require('../helpers');
 
 const getAll = async () => {
   const categories = await Category.findAll();
@@ -10,9 +11,7 @@ const create = async (name) => {
   const existingCategory = await Category.findOne({ where: { name } });
 
   if (existingCategory) {
-    const error = new Error('Category already registered');
-    error.type = 'conflict';
-
+    const error = createError('Category already registered', 'conflict');
     throw error;
   }
 

@@ -26,9 +26,7 @@ const getById = async (id) => {
   });
 
   if (!post) {
-    const error = new Error('Post does not exist');
-    error.type = 'notFound';
-
+    const error = createError('Post does not exist', 'notFound');
     throw error;
   }
 
@@ -39,9 +37,7 @@ const validateCategoryId = async (categoryId) => {
   const existingCategory = await Category.findOne({ where: { id: categoryId } });
 
   if (!existingCategory) {
-    const error = new Error('"categoryIds" not found');
-    error.type = 'invalidFields';
-
+    const error = createError('"categoryIds" not found', 'invalidFields');
     throw error;
   }
 };

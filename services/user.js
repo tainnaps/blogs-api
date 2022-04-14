@@ -1,4 +1,5 @@
 const { User } = require('../models');
+const { createError } = require('../helpers');
 
 const getAll = async () => {
   const users = await User.findAll();
@@ -16,9 +17,7 @@ const getById = async (id) => {
   const user = await User.findOne({ where: { id } });
 
   if (!user) {
-    const error = new Error('User does not exist');
-    error.type = 'notFound';
-
+    const error = createError('User does not exist', 'notFound');
     throw error;
   }
 
@@ -29,9 +28,7 @@ const create = async (displayName, email, password, image) => {
   const existingUser = await getByEmail(email);
 
   if (existingUser) {
-    const error = new Error('User already registered');
-    error.type = 'conflict';
-
+    const error = createError('User already registered', 'conflict');
     throw error;
   }
 
