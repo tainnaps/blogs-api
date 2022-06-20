@@ -13,13 +13,15 @@
     "shelljs": "0.8.4"
   },
   "scripts": {
-    "prestart": "npx sequelize-cli db:create && npx sequelize-cli db:migrate $",
+    "db:create": "npx sequelize-cli db:create && npx sequelize-cli db:migrate $",
+    "db:recreate": "npm run db:drop && npm run db:create && npm run db:seed",
     "start": "node index.js",
-    "drop": "npx sequelize-cli db:drop $",
-    "seed": "npx sequelize-cli db:seed:all $",
+    "db:drop": "npx sequelize-cli db:drop $",
+    "db:seed": "npx sequelize-cli db:seed:all $",
     "test": "jest --runInBand",
     "test-coverage": "jest --runInBand --coverage",
-    "debug": "nodemon index.js",
+    "dev": "nodemon index.js",
+    "predev": "npm run db:recreate",
     "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json ."
   },
   "devDependencies": {

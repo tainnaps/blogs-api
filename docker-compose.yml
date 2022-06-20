@@ -1,0 +1,23 @@
+version: '3.1'
+services:
+  db:
+    image: mysql:5.7
+    container_name: blogs_api_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret-password
+
+  back-end:
+    build: ./
+    container_name: blogs_api
+    depends_on:
+      - db
+    restart: always
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret-password
+      MYSQL_HOSTNAME: db
+      JWT_SECRET: supersecret
+    ports:
+      - 3000:3000
+    command: npm run dev
